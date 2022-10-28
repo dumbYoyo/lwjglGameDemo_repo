@@ -11,5 +11,5 @@ I'm uploading this in case it helps someone out (I doubt it will as the code is 
 
 ## Some Screenshots
 <p>
-    <img src="https://github.com/dumbYoyo/lwjglGameDemo_repo/tree/master/res/ss">
+    <img src="https://github.com/dumbYoyo/lwjglGameDemo_repo/tree/master/res/ss/Demo.PNG">
 </p>
