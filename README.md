@@ -10,6 +10,7 @@ This is a really simple project just with terrain, lighting (diffuse and specula
 I'm uploading this in case it helps someone out (I doubt it will as the code is unreadable).
 
 ## Some Screenshots
+This the current state:
 <p>
      <img src="res/ss/Demo.PNG"/>
 </p>
