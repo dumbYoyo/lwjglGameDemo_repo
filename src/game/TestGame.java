@@ -24,6 +24,7 @@ public class TestGame implements IGameLogic {
     private Light light;
     private Texture texture;
     private Terrain terrain;
+    private Shader terrainShader;
 
     private Text text;
     private int score = 0;
@@ -37,8 +38,10 @@ public class TestGame implements IGameLogic {
 
         shader = new Shader("res/shaders/vertex.vs", "res/shaders/fragment.fs");
         shader.compile();
+        terrainShader = new Shader("res/shaders/terrain/vertex.vs", "res/shaders/terrain/fragment.fs");
+        terrainShader.compile();
 
-        texture = new Texture("res/textures/white.png");
+        texture = new Texture("res/textures/stallTexture.png");
 
         gameObject = new GameObject(ModelLoader.load("res/models/dragon.obj"));
         gameObject.setPosition(0, 0, 0);
@@ -55,7 +58,7 @@ public class TestGame implements IGameLogic {
 
         text = new Text("I am a Genius", new Vector2f(20, Window.height-690), new Vector2f(0.5f));
 
-        terrain = new Terrain();
+        terrain = new Terrain(new Vector3f(0, 0, 0));
     }
 
     @Override
@@ -105,14 +108,15 @@ public class TestGame implements IGameLogic {
         renderer.clear();
         //renderer.render(window, gameObject, shader, light, texture);
         //renderer.render(window, g, shader, light, texture);
-        renderer.render(text);
+        //renderer.render(text);
 
-        renderer.render(terrain, shader, texture, light);
+        renderer.render(terrain, terrainShader, texture, light);
     }
 
     @Override
     public void cleanUp() {
         shader.cleanUp();
         renderer.cleanUp();
+        terrainShader.cleanUp();
     }
 }

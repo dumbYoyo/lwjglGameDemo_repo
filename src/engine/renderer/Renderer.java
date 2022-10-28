@@ -108,8 +108,6 @@ public class Renderer {
         shader.loadMatrix4f("model", model);
         shader.loadVec3f("lightPos", light.getPosition());
         shader.loadVec3f("lightColor", light.getColor());
-        shader.loadFloat("material.specularStrength", 0);
-        shader.loadFloat("material.reflectivity", 0);
 
         terrain.getTerrainGenerator().getMesh().render();
 

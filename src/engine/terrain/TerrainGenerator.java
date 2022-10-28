@@ -1,14 +1,10 @@
 package engine.terrain;
 
 import engine.renderer.Mesh;
-import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TerrainGenerator {
     private static final int VERTEX_COUNT = 4;
-    private static final int SIZE = 4;
+    private static final int SIZE = 400;
 
     private Mesh mesh;
 
