@@ -11,5 +11,5 @@ I'm uploading this in case it helps someone out (I doubt it will as the code is 
 
 ## Some Screenshots
 <p>
-     <img src="C:\Users\DELL-PC\IdeaProjects\LWJGL\LWJGL3\SERIOUS PROJECTS\3D Game Development with LWJGL 3\attempt 1\res\ss\Demo.PNG"/>
+     <img src="https://github.com/dumbYoyo/lwjglGameDemo_repo/tree/master/res/ss/Demo.PNG"/>
 </p>
