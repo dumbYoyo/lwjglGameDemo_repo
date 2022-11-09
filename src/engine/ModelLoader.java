@@ -1,7 +1,7 @@
 package engine;
 
 import engine.math.Utils;
-import engine.renderer.Mesh;
+import engine.rendering.utility.Mesh;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
 
@@ -9,6 +9,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModelLoader {
+    public static List<Mesh> load(String modelPath) {
+        AIScene aiScene = Assimp.aiImportFile(modelPath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate);
+        if (aiScene == null) {
+            System.out.println("Error loading model at: " + modelPath);
+        }
+
+        int numMeshes = aiScene.mNumMeshes();
+        PointerBuffer aiMeshes = aiScene.mMeshes();
+        List<Mesh> meshes = new ArrayList<>(numMeshes);
+        for (int i = 0; i < numMeshes; i++) {
+            AIMesh aiMesh = AIMesh.create(aiMeshes.get(i));
+            Mesh mesh = processMesh(aiMesh);
+            meshes.add(mesh);
+        }
+
+        return meshes;
+    }
+
+    /*
     public static Mesh[] load(String modelPath) {
         AIScene aiScene = Assimp.aiImportFile(modelPath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate);
         if (aiScene == null) {
@@ -26,6 +45,7 @@ public class ModelLoader {
 
         return meshes;
     }
+     */
 
     private static Mesh processMesh(AIMesh aiMesh) {
         List<Float> vertices = new ArrayList<>();

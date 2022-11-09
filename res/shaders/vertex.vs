@@ -13,9 +13,6 @@ uniform mat4 proj;
 uniform mat4 view;
 uniform mat4 model;
 
-uniform vec3 camPos;
-// uniform mat4 modelView;
-
 void main() {
     gl_Position = proj * view * model * vec4(aPos, 1.0);
     textureCoordinates = aTextureCoordinates;

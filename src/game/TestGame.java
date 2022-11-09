@@ -2,63 +2,57 @@ package game;
 
 import engine.*;
 import engine.input.MouseInput;
+import engine.input.MouseListener;
 import engine.objects.Camera;
-import engine.objects.GameObject;
+import engine.objects.Entity;
 import engine.objects.Light;
-import engine.renderer.*;
+import engine.rendering.Renderer;
+import engine.rendering.renderer.MasterRenderer;
+import engine.rendering.utility.Texture;
 import engine.terrain.Terrain;
 import engine.text.Text;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 
 public class TestGame implements IGameLogic {
-    private Renderer renderer;
-    private Shader shader;
-    private GameObject gameObject;
-    private GameObject g;
+    private Entity entity;
     private Camera camera;
     private Light light;
-    private Texture texture;
     private Terrain terrain;
-    private Shader terrainShader;
+    private MasterRenderer renderer;
+    private Entity player;
 
     private Text text;
     private int score = 0;
 
-    private List<GameObject> gameObjects = new ArrayList<>();
-
     @Override
     public void init() {
         camera = new Camera();
-        renderer = new Renderer(camera);
-
-        shader = new Shader("res/shaders/vertex.vs", "res/shaders/fragment.fs");
-        shader.compile();
-        terrainShader = new Shader("res/shaders/terrain/vertex.vs", "res/shaders/terrain/fragment.fs");
-        terrainShader.compile();
-
-        texture = new Texture("res/textures/stallTexture.png");
-
-        gameObject = new GameObject(ModelLoader.load("res/models/dragon.obj"));
-        gameObject.setPosition(0, 0, 0);
-        gameObject.setRotation(0, 180, 0);
-        gameObject.setSpecularStrength(128);
-        gameObject.setReflectivity(1);
-
-        g = new GameObject(new Mesh(new Shape(Shape.SQUARE)));
+        camera.setPosition(0, -2, -5);
 
         light = new Light(new Vector3f(2, 10, -2), new Vector3f(1, 1, 1));
 
-        gameObjects.add(gameObject);
-        gameObjects.add(g);
+        renderer = new MasterRenderer(camera);
 
-        text = new Text("I am a Genius", new Vector2f(20, Window.height-690), new Vector2f(0.5f));
+        entity = new Entity(ModelLoader.load("res/models/dragon.obj"));
+        entity.setPosition(0, 0, -10);
+        entity.setRotation(0, 180, 0);
+        entity.setSpecularStrength(128);
+        entity.setReflectivity(1);
+        entity.getEntityData().setTexture(new Texture("res/textures/ball.png"));
 
-        terrain = new Terrain(new Vector3f(0, 0, 0));
+        text = new Text("Hello World", new Vector2f(20, Window.height-690), new Vector2f(0.5f));
+
+        terrain = new Terrain(new Vector3f(0, 0, 0), 100);
+
+        player = new Entity(ModelLoader.load("res/models/ball.obj"));
+        player.setPosition(10, 0, 0);
+        player.getEntityData().setTexture(new Texture("res/textures/ball.png"));
     }
 
     @Override
@@ -67,8 +61,25 @@ public class TestGame implements IGameLogic {
 
     @Override
     public void update(Window window, float dt, MouseInput mouseInput) {
-        gameObject.getRotation().y += 3 * dt;
+        entity.getRotation().y += 3 * dt;
 
+        cameraMovement(window, dt);
+    }
+
+    @Override
+    public void render(Window window) {
+        Window.clear();
+
+        renderer.addEntity(entity);
+        renderer.addTerrain(terrain);
+        renderer.addText(text);
+        renderer.addEntity(player);
+
+        renderer.render(light);
+    }
+
+    float distance = 50;
+    private void cameraMovement(Window window, float dt) {
         float cameraMoveSpeed = 5;
         float cameraRotateSpeed = 3;
         if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_S) == GLFW.GLFW_PRESS) {
@@ -101,22 +112,22 @@ public class TestGame implements IGameLogic {
         if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_DOWN) == GLFW.GLFW_PRESS) {
             camera.getRotation().x -= cameraRotateSpeed * dt;
         }
-    }
 
-    @Override
-    public void render(Window window) {
-        renderer.clear();
-        //renderer.render(window, gameObject, shader, light, texture);
-        //renderer.render(window, g, shader, light, texture);
-        //renderer.render(text);
-
-        renderer.render(terrain, terrainShader, texture, light);
+        float m = 20;
+        float vd = (float) (distance * Math.cos(camera.getRotation().x));
+        float hd = (float) (distance * Math.sin(camera.getRotation().x));
+        float x = (float) (Math.sin(distance * player.getRotation().y));
+        float y = (float) (Math.cos(distance * player.getRotation().y));
+        distance -= MouseListener.getScrollY() * 2;
+        if (MouseListener.mouseButtonDown(0)) {
+            camera.getRotation().x -= MouseListener.getDy() * dt;
+            //camera.getRotation().y -= MouseListener.getDx() * dt;
+        }
+        camera.setPosition(x + hd, -y + vd, -distance);
     }
 
     @Override
     public void cleanUp() {
-        shader.cleanUp();
-        renderer.cleanUp();
-        terrainShader.cleanUp();
+
     }
 }

@@ -1,11 +1,12 @@
 package engine;
 
+import engine.input.MouseListener;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
 public class Window {
-    private long window;
+    private static long window;
     public static int width, height;
     private String title;
 
@@ -30,6 +31,11 @@ public class Window {
             System.err.println("Failed to create window");
         }
 
+
+        GLFW.glfwSetCursorPosCallback(window, MouseListener::mousePosCallback);
+        GLFW.glfwSetMouseButtonCallback(window, MouseListener::mouseButtonCallBack);
+        GLFW.glfwSetScrollCallback(window, MouseListener::mouseScrollCallback);
+
         GLFW.glfwMakeContextCurrent(window);
         GL.createCapabilities();
 
@@ -37,11 +43,20 @@ public class Window {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     }
 
+    public static void clear() {
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GL11.glClearColor(0, 0, 0, 1);
+
+        MouseListener.endFrame();
+    }
+
     public boolean isKeyPressed(int key) {
         return GLFW.glfwGetKey(window, key) == GLFW.GLFW_PRESS;
     }
 
     public void cleanUp() {
+        GLFW.glfwDestroyWindow(window);
         GLFW.glfwTerminate();
     }
 

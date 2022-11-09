@@ -1,7 +1,7 @@
 package engine.text;
 
 import engine.math.Utils;
-import engine.renderer.Mesh;
+import engine.rendering.utility.Mesh;
 import org.joml.Vector2f;
 
 import java.nio.charset.StandardCharsets;

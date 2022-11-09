@@ -1,4 +1,4 @@
-package engine.renderer;
+package engine.rendering.utility;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;

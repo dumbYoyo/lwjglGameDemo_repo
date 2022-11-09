@@ -1,6 +1,6 @@
 package engine.objects;
 
-import engine.renderer.Mesh;
+import engine.rendering.utility.Mesh;
 import org.joml.Vector3f;
 
 public class Light {

@@ -1,14 +1,14 @@
 package engine;
 
-import engine.objects.GameObject;
+import engine.objects.Entity;
 
 public interface IHud {
-    GameObject[] getGameObjects();
+    Entity[] getGameObjects();
 
     default void cleanUp() {
-        GameObject[] gameObjects = getGameObjects();
-        for (GameObject gameObject : gameObjects) {
-            gameObject.getMesh().cleanUp();
+        Entity[] entities = getGameObjects();
+        for (Entity entity : entities) {
+            entity.getEntityData().getMesh().cleanUp();
         }
     }
 }

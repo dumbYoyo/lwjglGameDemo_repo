@@ -1,20 +1,22 @@
 package engine.objects;
 
-import engine.renderer.Mesh;
-import engine.renderer.Shape;
+import engine.rendering.utility.Mesh;
+import engine.rendering.utility.Shape;
+import engine.rendering.utility.Texture;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-public class GameObject {
-    private Mesh mesh;
-    private Mesh[] meshes;
+import java.util.List;
+
+public class Entity {
+    private EntityData entityData = new EntityData();
     private Vector3f position;
     private Vector3f rotation;
     private Vector4f color;
     private float scale;
     private float specularStrength, reflectivity;
 
-    public GameObject() {
+    public Entity() {
         position = new Vector3f(0, 0, 0);
         scale = 1;
         rotation = new Vector3f(0, 0, 0);
@@ -23,8 +25,8 @@ public class GameObject {
         reflectivity = 1;
     }
 
-    public GameObject(Shape shape) {
-        this.mesh = new Mesh(shape);
+    public Entity(Shape shape) {
+        entityData.setMesh(new Mesh(shape));
         position = new Vector3f(0, 0, 0);
         scale = 1;
         rotation = new Vector3f(0, 0, 0);
@@ -33,8 +35,8 @@ public class GameObject {
         reflectivity = 1;
     }
 
-    public GameObject(Mesh mesh) {
-        this.mesh = mesh;
+    public Entity(Mesh mesh) {
+        entityData.setMesh(mesh);
         position = new Vector3f(0, 0, 0);
         scale = 1;
         rotation = new Vector3f(0, 0, 0);
@@ -43,8 +45,8 @@ public class GameObject {
         reflectivity = 1;
     }
 
-    public GameObject(Mesh[] meshes) {
-        this.meshes = meshes;
+    public Entity(List<Mesh> meshes) {
+        entityData.setMeshes(meshes);
         position = new Vector3f(0, 0, 0);
         scale = 1;
         rotation = new Vector3f(0, 0, 0);
@@ -87,16 +89,8 @@ public class GameObject {
         this.rotation.z = z;
     }
 
-    public void setMesh(Mesh mesh) {
-        this.mesh = mesh;
-    }
-
-    public Mesh getMesh() {
-        return mesh;
-    }
-
-    public Mesh[] getMeshes() {
-        return meshes;
+    public EntityData getEntityData() {
+        return entityData;
     }
 
     public float getSpecularStrength() {

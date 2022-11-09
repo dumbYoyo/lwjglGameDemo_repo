@@ -21,7 +21,7 @@ uniform Material material;
 
 void main() {
     vec3 toLight = normalize(lightPos - vertexPos);
-    float diff = dot(toLight, normal);
+    float diff = max(dot(toLight, normal), 0.0f);
     vec3 diffuse = diff * lightColor;
 
     vec3 fromLight = -(toLight);
@@ -31,6 +31,6 @@ void main() {
     vec3 specular = spec * material.reflectivity * lightColor;
 
     //aColour = texture(tex_sampler, textureCoordinates);
-    aColour = (texture(tex_sampler, textureCoordinates * 40) * vec4(diffuse, 1.0) + vec4(specular, 1.0));
+    aColour = (texture(tex_sampler, textureCoordinates) * vec4(diffuse, 1.0) + vec4(specular, 1.0));
     //aColour = vec4(1, 1, 1, 1);
 }

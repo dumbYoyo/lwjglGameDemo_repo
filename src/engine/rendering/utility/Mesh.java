@@ -1,4 +1,4 @@
-package engine.renderer;
+package engine.rendering.utility;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Mesh {
     private int vao, vbo, tbo, nbo, ibo;
-    private int vertexCount;
+    public int vertexCount;
     private float[] vertices, texCoords;
 
     private List<Integer> vbos = new ArrayList<>();

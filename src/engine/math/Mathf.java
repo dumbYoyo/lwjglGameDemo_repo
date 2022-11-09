@@ -1,19 +1,18 @@
 package engine.math;
 
 import engine.objects.Camera;
-import engine.objects.GameObject;
+import engine.objects.Entity;
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-public class uMatrix {
+public class Mathf {
     private Matrix4f modelViewMatrix, modelMatrix, modelOrthoMatrix;
     private Matrix4f projMatrix;
     private Matrix4f viewMatrix;
 
     private Matrix4f ortho;
 
-    public uMatrix() {
+    public Mathf() {
         modelViewMatrix = new Matrix4f();
         modelMatrix = new Matrix4f();
         projMatrix = new Matrix4f();
@@ -34,13 +33,13 @@ public class uMatrix {
         return ortho;
     }
 
-    public Matrix4f getOrthoModelMatrix(GameObject gameObject, Matrix4f ortho) {
+    public Matrix4f getOrthoModelMatrix(Entity entity, Matrix4f ortho) {
         modelMatrix.identity();
-        modelMatrix.translate(gameObject.getPosition());
-        modelMatrix.rotate(gameObject.getRotation().x, new Vector3f(1, 0, 0));
-        modelMatrix.rotate(gameObject.getRotation().y, new Vector3f(0, 1, 0));
-        modelMatrix.rotate(gameObject.getRotation().z, new Vector3f(0, 0, 1));
-        modelMatrix.scale(gameObject.getScale());
+        modelMatrix.translate(entity.getPosition());
+        modelMatrix.rotate(entity.getRotation().x, new Vector3f(1, 0, 0));
+        modelMatrix.rotate(entity.getRotation().y, new Vector3f(0, 1, 0));
+        modelMatrix.rotate(entity.getRotation().z, new Vector3f(0, 0, 1));
+        modelMatrix.scale(entity.getScale());
         return ortho.mul(modelMatrix);
     }
 
@@ -52,23 +51,23 @@ public class uMatrix {
         return ortho.mul(modelOrthoMatrix);
     }
 
-    public Matrix4f getModelViewMatrix(GameObject gameObject, Matrix4f viewMatrix) {
+    public Matrix4f getModelViewMatrix(Entity entity, Matrix4f viewMatrix) {
         modelViewMatrix.identity();
-        modelViewMatrix.translate(gameObject.getPosition());
-        modelViewMatrix.rotate(gameObject.getRotation().x, new Vector3f(1, 0, 0));
-        modelViewMatrix.rotate(gameObject.getRotation().y, new Vector3f(0, 1, 0));
-        modelViewMatrix.rotate(gameObject.getRotation().z, new Vector3f(0, 0, 1));
-        modelViewMatrix.scale(gameObject.getScale());
+        modelViewMatrix.translate(entity.getPosition());
+        modelViewMatrix.rotate(entity.getRotation().x, new Vector3f(1, 0, 0));
+        modelViewMatrix.rotate(entity.getRotation().y, new Vector3f(0, 1, 0));
+        modelViewMatrix.rotate(entity.getRotation().z, new Vector3f(0, 0, 1));
+        modelViewMatrix.scale(entity.getScale());
         return viewMatrix.mul(modelViewMatrix);
     }
 
-    public Matrix4f getModelMatrix(GameObject gameObject) {
+    public Matrix4f getModelMatrix(Entity entity) {
         modelMatrix.identity();
-        modelMatrix.translate(gameObject.getPosition());
-        modelMatrix.rotate(gameObject.getRotation().x, new Vector3f(1, 0, 0));
-        modelMatrix.rotate(gameObject.getRotation().y, new Vector3f(0, 1, 0));
-        modelMatrix.rotate(gameObject.getRotation().z, new Vector3f(0, 0, 1));
-        modelMatrix.scale(gameObject.getScale());
+        modelMatrix.translate(entity.getPosition());
+        modelMatrix.rotate(entity.getRotation().x, new Vector3f(1, 0, 0));
+        modelMatrix.rotate(entity.getRotation().y, new Vector3f(0, 1, 0));
+        modelMatrix.rotate(entity.getRotation().z, new Vector3f(0, 0, 1));
+        modelMatrix.scale(entity.getScale());
         return modelMatrix;
     }
 

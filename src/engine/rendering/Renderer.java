@@ -1,11 +1,14 @@
-package engine.renderer;
+package engine.rendering;
 
 import engine.IHud;
 import engine.objects.Camera;
-import engine.objects.GameObject;
+import engine.objects.Entity;
 import engine.Window;
-import engine.math.uMatrix;
+import engine.math.Mathf;
 import engine.objects.Light;
+import engine.rendering.utility.Mesh;
+import engine.rendering.utility.Shader;
+import engine.rendering.utility.Texture;
 import engine.terrain.Terrain;
 import engine.text.Text;
 import org.joml.Matrix4f;
@@ -17,9 +20,10 @@ import org.lwjgl.opengl.GL20;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class Renderer {
-    private List<GameObject> gameObjects = new ArrayList<>();
-    private uMatrix matrixHelper;
+    private List<Entity> entities = new ArrayList<>();
+    private Mathf matrixHelper;
 
     private Camera camera;
 
@@ -28,14 +32,15 @@ public class Renderer {
 
     public Renderer(Camera camera) {
         this.camera = camera;
-        matrixHelper = new uMatrix();
+        matrixHelper = new Mathf();
         hudShader = new Shader("res/shaders/text/vertex.vs", "res/shaders/text/fragment.fs");
         hudShader.compile();
         hudTexture = new Texture("res/text/verdana.png");
     }
 
-    public void render(Window window, List<GameObject> gameObjects, Shader shader, Light light, Texture texture) {
-        this.gameObjects = gameObjects;
+    /*
+    public void render(Window window, List<Entity> entities, Shader shader, Light light, Texture texture) {
+        this.entities = entities;
         shader.bind();
         Matrix4f proj = matrixHelper.getProjMatrix(45, window.getWidth() / (float) window.getHeight(), 0.1f, 1000f);
         shader.loadMatrix4f("proj", proj);
@@ -46,27 +51,27 @@ public class Renderer {
         shader.loadMatrix4f("view", view);
         shader.loadVec3f("lightPos", light.getPosition());
         shader.loadVec3f("lightColor", light.getColor());
-        for (GameObject gameObject : gameObjects) {
-            Matrix4f model = matrixHelper.getModelMatrix(gameObject);
+        for (Entity entity : entities) {
+            Matrix4f model = matrixHelper.getModelMatrix(entity);
             shader.loadMatrix4f("model", model);
             // Matrix4f modelView = matrixHelper.getModelViewMatrix(gameObject, view);
             // shader.loadMatrix4f("modelView", modelView);
-            shader.loadFloat("material.specularStrength", gameObject.getSpecularStrength());
-            shader.loadFloat("material.reflectivity", gameObject.getReflectivity());
-            if (gameObject.getMesh() != null) {
-                gameObject.getMesh().render();
+            shader.loadFloat("material.specularStrength", entity.getSpecularStrength());
+            shader.loadFloat("material.reflectivity", entity.getReflectivity());
+            if (entity.getEntityData().getMesh() != null) {
+                entity.getEntityData().getMesh().render();
             }
-            if (gameObject.getMeshes() != null) {
-                for (int i = 0; i < gameObject.getMeshes().length; i++) {
-                    gameObject.getMeshes()[i].render();
+            if (entity.getEntityData().getMeshes() != null) {
+                for (int i = 0; i < entity.getEntityData().getMeshes().length; i++) {
+                    entity.getEntityData().getMeshes()[i].render();
                 }
             }
         }
         shader.unbind();
     }
 
-    public void render(Window window, GameObject gameObject, Shader shader, Light light, Texture texture) {
-        this.gameObjects.add(gameObject);
+    public void render(Window window, Entity entity, Shader shader, Light light, Texture texture) {
+        this.entities.add(entity);
         shader.bind();
         Matrix4f proj = matrixHelper.getProjMatrix(45, window.getWidth() / (float) window.getHeight(), 0.1f, 1000f);
         shader.loadMatrix4f("proj", proj);
@@ -75,24 +80,25 @@ public class Renderer {
         GL20.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
         Matrix4f view = matrixHelper.getViewMatrix(camera);
         shader.loadMatrix4f("view", view);
-        Matrix4f model = matrixHelper.getModelMatrix(gameObject);
+        Matrix4f model = matrixHelper.getModelMatrix(entity);
         shader.loadMatrix4f("model", model);
         // Matrix4f modelView = matrixHelper.getModelViewMatrix(gameObject, view);
         // shader.loadMatrix4f("modelView", modelView);
         shader.loadVec3f("lightPos", light.getPosition());
         shader.loadVec3f("lightColor", light.getColor());
-        shader.loadFloat("material.specularStrength", gameObject.getSpecularStrength());
-        shader.loadFloat("material.reflectivity", gameObject.getReflectivity());
-        if (gameObject.getMesh() != null) {
-            gameObject.getMesh().render();
+        shader.loadFloat("material.specularStrength", entity.getSpecularStrength());
+        shader.loadFloat("material.reflectivity", entity.getReflectivity());
+        if (entity.getEntityData().getMesh() != null) {
+            entity.getEntityData().getMesh().render();
         }
-        if (gameObject.getMeshes() != null) {
-            for (int i = 0; i < gameObject.getMeshes().length; i++) {
-                gameObject.getMeshes()[i].render();
+        if (entity.getEntityData().getMeshes() != null) {
+            for (int i = 0; i < entity.getEntityData().getMeshes().length; i++) {
+                entity.getEntityData().getMeshes()[i].render();
             }
         }
         shader.unbind();
     }
+    */
 
     public void render(Terrain terrain, Shader shader, Texture texture, Light light) {
         shader.bind();
@@ -104,7 +110,7 @@ public class Renderer {
         GL20.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
         Matrix4f view = matrixHelper.getViewMatrix(camera);
         shader.loadMatrix4f("view", view);
-        Matrix4f model = matrixHelper.getModelMatrix(terrain.getPosition(), new Vector3f(0, 0, 0), new Vector3f(1));
+        Matrix4f model = matrixHelper.getModelMatrix(new Vector3f(terrain.getPosition().x - terrain.getTerrainGenerator().getSize()/2f, terrain.getPosition().y, terrain.getPosition().y - terrain.getTerrainGenerator().getSize()/2f), new Vector3f(0, 0, 0), new Vector3f(1));
         shader.loadMatrix4f("model", model);
         shader.loadVec3f("lightPos", light.getPosition());
         shader.loadVec3f("lightColor", light.getColor());
@@ -118,10 +124,10 @@ public class Renderer {
         hudShader.bind();
         Matrix4f ortho = matrixHelper.getOrthoMatrix(0, Window.width, Window.height, 0);
         GL20.glBindTexture(GL11.GL_TEXTURE_2D, hudTexture.getTextureID());
-        for (GameObject gameObject : hud.getGameObjects()) {
-            Mesh mesh = gameObject.getMesh();
-            Matrix4f orthoModel = matrixHelper.getOrthoModelMatrix(gameObject, ortho);
-            hudShader.loadVec4f("color", gameObject.getColor());
+        for (Entity entity : hud.getGameObjects()) {
+            Mesh mesh = entity.getEntityData().getMesh();
+            Matrix4f orthoModel = matrixHelper.getOrthoModelMatrix(entity, ortho);
+            hudShader.loadVec4f("color", entity.getColor());
             hudShader.loadMatrix4f("orthoModel", orthoModel);
 
             mesh.render();
@@ -151,15 +157,17 @@ public class Renderer {
     }
 
     public void cleanUp() {
-        for (GameObject gameObject : gameObjects) {
-            if (gameObject.getMesh() != null) {
-                gameObject.getMesh().cleanUp();
+        for (Entity entity : entities) {
+            if (entity.getEntityData().getMesh() != null) {
+                entity.getEntityData().getMesh().cleanUp();
             }
-            if (gameObject.getMeshes() != null) {
-                for (int i = 0; i < gameObject.getMeshes().length; i++) {
-                    gameObject.getMeshes()[i].cleanUp();
+            /*
+            if (entity.getEntityData().getMeshes() != null) {
+                for (int i = 0; i < entity.getEntityData().getMeshes().length; i++) {
+                    entity.getEntityData().getMeshes()[i].cleanUp();
                 }
             }
+             */
         }
     }
 }
