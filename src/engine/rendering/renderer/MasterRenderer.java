@@ -27,15 +27,11 @@ public class MasterRenderer {
     private TextRenderer textRenderer;
     private Shader textShader;
 
-    private Camera camera;
-
     private Map<EntityData, List<Entity>> entities = new HashMap<>();
     private Map<TerrainGenerator, List<Terrain>> terrains = new HashMap<>();
     private List<Text> texts = new ArrayList<>();
 
-    public MasterRenderer(Camera camera) {
-        this.camera = camera;
-
+    public MasterRenderer() {
         entityShader = new Shader("res/shaders/vertex.vs", "res/shaders/fragment.fs");
         entityShader.compile();
         entityRenderer = new EntityRenderer(entityShader);
@@ -53,7 +49,7 @@ public class MasterRenderer {
         setupProjections();
     }
 
-    public void render(Light light) {
+    public void render(Light light, Camera camera) {
         Matrix4f view = mathf.getViewMatrix(camera);
 
         entityShader.bind();
@@ -94,7 +90,6 @@ public class MasterRenderer {
         textShader.bind();
         textShader.loadMatrix4f("proj", ortho);
         textShader.unbind();
-
     }
 
     public void addText(Text text) {

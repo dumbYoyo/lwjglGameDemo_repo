@@ -1,23 +1,17 @@
 package game;
 
 import engine.*;
-import engine.input.MouseInput;
 import engine.input.MouseListener;
 import engine.objects.Camera;
 import engine.objects.Entity;
 import engine.objects.Light;
-import engine.rendering.Renderer;
 import engine.rendering.renderer.MasterRenderer;
 import engine.rendering.utility.Texture;
 import engine.terrain.Terrain;
 import engine.text.Text;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
-
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
 
 public class TestGame implements IGameLogic {
     private Entity entity;
@@ -37,7 +31,7 @@ public class TestGame implements IGameLogic {
 
         light = new Light(new Vector3f(2, 10, -2), new Vector3f(1, 1, 1));
 
-        renderer = new MasterRenderer(camera);
+        renderer = new MasterRenderer();
 
         entity = new Entity(ModelLoader.load("res/models/dragon.obj"));
         entity.setPosition(0, 0, -10);
@@ -50,20 +44,31 @@ public class TestGame implements IGameLogic {
 
         terrain = new Terrain(new Vector3f(0, 0, 0), 100);
 
-        player = new Entity(ModelLoader.load("res/models/ball.obj"));
+        player = new Entity(ModelLoader.load("res/models/Player.obj"));
+        player.setRotation(0, 0, 0);
         player.setPosition(10, 0, 0);
-        player.getEntityData().setTexture(new Texture("res/textures/ball.png"));
+        player.getEntityData().setTexture(new Texture("res/textures/Player.png"));
     }
 
     @Override
-    public void input(Window window, MouseInput mouseInput) {
-    }
-
-    @Override
-    public void update(Window window, float dt, MouseInput mouseInput) {
+    public void update(Window window, float dt) {
         entity.getRotation().y += 3 * dt;
 
-        cameraMovement(window, dt);
+        cameraMovement(dt);
+
+        float playerSpeed = 10;
+        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_S) == GLFW.GLFW_PRESS) {
+            player.getPosition().z -= playerSpeed * dt;
+        }
+        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
+            player.getPosition().z += playerSpeed * dt;
+        }
+        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_A) == GLFW.GLFW_PRESS) {
+            player.getPosition().x += playerSpeed * dt;
+        }
+        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
+            player.getPosition().x -= playerSpeed * dt;
+        }
     }
 
     @Override
@@ -75,55 +80,30 @@ public class TestGame implements IGameLogic {
         renderer.addText(text);
         renderer.addEntity(player);
 
-        renderer.render(light);
+        renderer.render(light, camera);
     }
 
     float distance = 50;
-    private void cameraMovement(Window window, float dt) {
-        float cameraMoveSpeed = 5;
-        float cameraRotateSpeed = 3;
-        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_S) == GLFW.GLFW_PRESS) {
-            camera.getPosition().z -= cameraMoveSpeed * dt;
-        }
-        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
-            camera.getPosition().z += cameraMoveSpeed * dt;
-        }
-        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_A) == GLFW.GLFW_PRESS) {
-            camera.getPosition().x += cameraMoveSpeed * dt;
-        }
-        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
-            camera.getPosition().x -= cameraMoveSpeed * dt;
-        }
-        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_Q) == GLFW.GLFW_PRESS) {
-            camera.getPosition().y += cameraMoveSpeed * dt;
-        }
-        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_E) == GLFW.GLFW_PRESS) {
-            camera.getPosition().y -= cameraMoveSpeed * dt;
-        }
-        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_LEFT) == GLFW.GLFW_PRESS) {
-            camera.getRotation().y -= cameraRotateSpeed * dt;
-        }
-        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_RIGHT) == GLFW.GLFW_PRESS) {
-            camera.getRotation().y += cameraRotateSpeed * dt;
-        }
-        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_UP) == GLFW.GLFW_PRESS) {
-            camera.getRotation().x += cameraRotateSpeed * dt;
-        }
-        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_DOWN) == GLFW.GLFW_PRESS) {
-            camera.getRotation().x -= cameraRotateSpeed * dt;
-        }
-
+    float aap = 0f;
+    float s = 4;
+    private void cameraMovement(float dt) {
         float m = 20;
-        float vd = (float) (distance * Math.cos(camera.getRotation().x));
-        float hd = (float) (distance * Math.sin(camera.getRotation().x));
-        float x = (float) (Math.sin(distance * player.getRotation().y));
-        float y = (float) (Math.cos(distance * player.getRotation().y));
-        distance -= MouseListener.getScrollY() * 2;
+        float vd = (float) (distance * Math.sin(Math.toRadians(camera.getPitch())));
+        float hd = (float) (distance * Math.cos(Math.toRadians(camera.getPitch())));
+        float theta = player.getRotation().y + aap;
+        float x = (float) (hd * Math.sin(Math.toRadians(theta)));
+        float z = (float) (hd * Math.cos(Math.toRadians(theta)));
+        distance -= MouseListener.getScrollY() * 6;
         if (MouseListener.mouseButtonDown(0)) {
-            camera.getRotation().x -= MouseListener.getDy() * dt;
-            //camera.getRotation().y -= MouseListener.getDx() * dt;
+            camera.setPitch(camera.getPitch() - (MouseListener.getDy() * s * dt));
         }
-        camera.setPosition(x + hd, -y + vd, -distance);
+        if (MouseListener.mouseButtonDown(1))
+            aap += MouseListener.getDx() * s  * dt;
+        camera.setYaw(180 - theta);
+        camera.setPosition(player.getPosition().x - x, player.getPosition().y + vd, player.getPosition().z - z);
+
+        if (distance <= 5)
+            distance = 5;
     }
 
     @Override

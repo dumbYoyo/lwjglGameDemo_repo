@@ -21,8 +21,8 @@ public class Entity {
         scale = 1;
         rotation = new Vector3f(0, 0, 0);
         color = new Vector4f(1, 1, 1, 1);
-        specularStrength = 128;
-        reflectivity = 1;
+        specularStrength = 1;
+        reflectivity = 0;
     }
 
     public Entity(Shape shape) {
@@ -31,8 +31,8 @@ public class Entity {
         scale = 1;
         rotation = new Vector3f(0, 0, 0);
         color = new Vector4f(1, 1, 1, 1);
-        specularStrength = 128;
-        reflectivity = 1;
+        specularStrength = 1;
+        reflectivity = 0;
     }
 
     public Entity(Mesh mesh) {
@@ -41,8 +41,8 @@ public class Entity {
         scale = 1;
         rotation = new Vector3f(0, 0, 0);
         color = new Vector4f(1, 1, 1, 1);
-        specularStrength = 128;
-        reflectivity = 1;
+        specularStrength = 1;
+        reflectivity = 0;
     }
 
     public Entity(List<Mesh> meshes) {
@@ -51,6 +51,8 @@ public class Entity {
         scale = 1;
         rotation = new Vector3f(0, 0, 0);
         color = new Vector4f(1, 1, 1, 1);
+        specularStrength = 1;
+        reflectivity = 0;
     }
 
     public Vector3f getPosition() {

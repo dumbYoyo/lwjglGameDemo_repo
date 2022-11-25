@@ -7,15 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityData {
-    private Mesh mesh;
     private List<Mesh> meshes = new ArrayList<>();
     private Texture texture;
 
     public Mesh getMesh() {
-        if (meshes.size() <= 1) {
-            return meshes.get(0);
-        }
-        return null;
+        return meshes.get(0);
     }
 
     public Texture getTexture() {

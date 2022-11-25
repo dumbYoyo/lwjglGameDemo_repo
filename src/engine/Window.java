@@ -31,7 +31,6 @@ public class Window {
             System.err.println("Failed to create window");
         }
 
-
         GLFW.glfwSetCursorPosCallback(window, MouseListener::mousePosCallback);
         GLFW.glfwSetMouseButtonCallback(window, MouseListener::mouseButtonCallBack);
         GLFW.glfwSetScrollCallback(window, MouseListener::mouseScrollCallback);
@@ -47,7 +46,6 @@ public class Window {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearColor(0, 0, 0, 1);
-
         MouseListener.endFrame();
     }
 

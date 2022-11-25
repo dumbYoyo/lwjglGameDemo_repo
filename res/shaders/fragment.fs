@@ -21,7 +21,7 @@ uniform Material material;
 
 void main() {
     vec3 toLight = normalize(lightPos - vertexPos);
-    float diff = max(dot(toLight, normal), 0.0f);
+    float diff = max(dot(toLight, normal), 0.1f);
     vec3 diffuse = diff * lightColor;
 
     vec3 fromLight = -(toLight);

@@ -4,11 +4,12 @@ import org.joml.Vector3f;
 
 public class Camera {
     private Vector3f position;
-    private Vector3f rotation;
+    private float pitch;
+    private float yaw;
+    private float roll;
 
     public Camera() {
         position = new Vector3f(0, 0, 0);
-        rotation = new Vector3f(0, 0, 0);
     }
 
     public Vector3f getPosition() {
@@ -25,17 +26,27 @@ public class Camera {
         this.position.z = z;
     }
 
-    public Vector3f getRotation() {
-        return rotation;
+    public float getPitch() {
+        return pitch;
     }
 
-    public void setRotation(Vector3f rotation) {
-        this.rotation = rotation;
+    public void setPitch(float pitch) {
+        this.pitch = pitch;
     }
 
-    public void setRotation(float x, float y, float z) {
-        this.rotation.x = x;
-        this.rotation.y = y;
-        this.rotation.z = z;
+    public float getYaw() {
+        return yaw;
+    }
+
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
+    }
+
+    public float getRoll() {
+        return roll;
+    }
+
+    public void setRoll(float roll) {
+        this.roll = roll;
     }
 }

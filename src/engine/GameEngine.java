@@ -1,19 +1,17 @@
 package engine;
 
-import engine.input.MouseInput;
+import engine.archive.MouseInput;
 import org.lwjgl.glfw.GLFW;
 
 public class GameEngine implements Runnable {
     private Window window;
     private IGameLogic gameLogic;
-    private MouseInput mouseInput;
     private final Thread gameLoopThread;
     private boolean vSync;
 
     public GameEngine(String windowTitle, int width, int height, boolean vSync, IGameLogic gameLogic) {
         gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
         window = new Window(width, height, windowTitle);
-        mouseInput = new MouseInput();
         this.gameLogic = gameLogic;
         this.vSync = vSync;
     }
@@ -44,8 +42,6 @@ public class GameEngine implements Runnable {
             previous = now;
             steps += elapsed;
 
-            input();
-
             while (steps >= secsPerUpdate) {
                 update((float) elapsed);
                 steps -= secsPerUpdate;
@@ -73,13 +69,8 @@ public class GameEngine implements Runnable {
         }
     }
 
-    protected void input() {
-        mouseInput.input(window);
-        gameLogic.input(window, mouseInput);
-    }
-
     protected void update(float dt) {
-        gameLogic.update(window, dt, mouseInput);
+        gameLogic.update(window, dt);
     }
 
     protected void render() {
@@ -94,7 +85,6 @@ public class GameEngine implements Runnable {
     protected void init() {
         window.create();
         gameLogic.init();
-        mouseInput.init(window);
         if (vSync) {
             window.setSwapInterval(1);
         }

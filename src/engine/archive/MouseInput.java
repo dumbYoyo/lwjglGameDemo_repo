@@ -1,10 +1,11 @@
-package engine.input;
+package engine.archive;
 
 import engine.Window;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
+@Deprecated
 // note - this code is shamelessly copied and pasted haha
 public class MouseInput {
     private final Vector2d previousPos;
@@ -26,6 +27,7 @@ public class MouseInput {
     }
 
     public void init(Window window) {
+        /*
         GLFW.glfwSetCursorPosCallback(window.getWindow(), (windowHandle, xpos, ypos) -> {
             currentPos.x = xpos;
             currentPos.y = ypos;
@@ -37,6 +39,7 @@ public class MouseInput {
             leftButtonPressed = button == GLFW.GLFW_MOUSE_BUTTON_1 && action == GLFW.GLFW_PRESS;
             rightButtonPressed = button == GLFW.GLFW_MOUSE_BUTTON_2 && action == GLFW.GLFW_PRESS;
         });
+         */
     }
 
     public Vector2f getDisplVec() {

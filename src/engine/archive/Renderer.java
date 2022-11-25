@@ -1,6 +1,6 @@
-package engine.rendering;
+package engine.archive;
 
-import engine.IHud;
+import engine.archive.IHud;
 import engine.objects.Camera;
 import engine.objects.Entity;
 import engine.Window;
