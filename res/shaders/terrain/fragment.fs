@@ -11,9 +11,10 @@ uniform sampler2D tex_sampler;
 
 uniform vec3 lightPos;
 uniform vec3 lightColor;
+uniform vec3 direction;
 
 void main() {
-    vec3 toLight = normalize(lightPos - vertexPos);
+    vec3 toLight = normalize(-direction);
     float diff = dot(toLight, normal);
     vec3 diffuse = diff * lightColor;
 

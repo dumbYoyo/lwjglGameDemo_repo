@@ -1,7 +1,7 @@
-package engine.rendering.renderer;
+package engine.rendering;
 
 import engine.math.Mathf;
-import engine.rendering.utility.Shader;
+import engine.utility.Shader;
 import engine.terrain.Terrain;
 import engine.terrain.TerrainGenerator;
 import org.joml.Matrix4f;

@@ -49,6 +49,11 @@ public class Window {
         MouseListener.endFrame();
     }
 
+    public static void clearDepth() {
+        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        MouseListener.endFrame();
+    }
+
     public boolean isKeyPressed(int key) {
         return GLFW.glfwGetKey(window, key) == GLFW.GLFW_PRESS;
     }

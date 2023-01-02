@@ -1,14 +1,14 @@
 package engine.objects;
 
-import engine.rendering.utility.Mesh;
-import engine.rendering.utility.Texture;
+import engine.utility.Mesh;
+import engine.utility.Texture;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EntityData {
     private List<Mesh> meshes = new ArrayList<>();
-    private Texture texture;
+    private Texture texture = null;
 
     public Mesh getMesh() {
         return meshes.get(0);

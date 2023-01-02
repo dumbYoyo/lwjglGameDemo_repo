@@ -1,4 +1,4 @@
-package engine.rendering.utility;
+package engine.utility;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;

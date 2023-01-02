@@ -1,4 +1,4 @@
-package engine.rendering.utility;
+package engine.utility;
 
 public class Shape {
     private int shape;

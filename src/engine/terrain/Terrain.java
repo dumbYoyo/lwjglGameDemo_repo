@@ -1,6 +1,6 @@
 package engine.terrain;
 
-import engine.rendering.utility.Texture;
+import engine.utility.Texture;
 import org.joml.Vector3f;
 
 public class Terrain {
@@ -9,7 +9,7 @@ public class Terrain {
 
     public Terrain(Vector3f position, float size) {
         this.position = position;
-        terrainGenerator = new TerrainGenerator(size, new Texture("res/textures/stallTexture.png"));
+        terrainGenerator = new TerrainGenerator(size, new Texture("res/textures/Grass.png"));
     }
 
     public Vector3f getPosition() {

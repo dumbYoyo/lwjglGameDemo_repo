@@ -1,14 +1,13 @@
 package engine.archive;
 
-import engine.archive.IHud;
 import engine.objects.Camera;
 import engine.objects.Entity;
 import engine.Window;
 import engine.math.Mathf;
 import engine.objects.Light;
-import engine.rendering.utility.Mesh;
-import engine.rendering.utility.Shader;
-import engine.rendering.utility.Texture;
+import engine.utility.Mesh;
+import engine.utility.Shader;
+import engine.utility.Texture;
 import engine.terrain.Terrain;
 import engine.text.Text;
 import org.joml.Matrix4f;
@@ -127,7 +126,7 @@ public class Renderer {
         for (Entity entity : hud.getGameObjects()) {
             Mesh mesh = entity.getEntityData().getMesh();
             Matrix4f orthoModel = matrixHelper.getOrthoModelMatrix(entity, ortho);
-            hudShader.loadVec4f("color", entity.getColor());
+            hudShader.loadVec3f("color", entity.getColor());
             hudShader.loadMatrix4f("orthoModel", orthoModel);
 
             mesh.render();

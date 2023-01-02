@@ -1,8 +1,8 @@
-package engine.rendering.renderer;
+package engine.rendering;
 
 import engine.math.Mathf;
-import engine.rendering.utility.Shader;
-import engine.rendering.utility.Texture;
+import engine.utility.Shader;
+import engine.utility.Texture;
 import engine.text.Text;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;

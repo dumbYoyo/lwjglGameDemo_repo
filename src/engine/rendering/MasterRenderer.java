@@ -1,4 +1,4 @@
-package engine.rendering.renderer;
+package engine.rendering;
 
 import engine.Window;
 import engine.math.Mathf;
@@ -6,8 +6,8 @@ import engine.objects.Camera;
 import engine.objects.Entity;
 import engine.objects.EntityData;
 import engine.objects.Light;
-import engine.rendering.utility.Shader;
-import engine.rendering.utility.Texture;
+import engine.utility.Shader;
+import engine.utility.Texture;
 import engine.terrain.Terrain;
 import engine.terrain.TerrainGenerator;
 import engine.text.Text;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MasterRenderer {
-    private Shader entityShader;
+    private Shader entityShader, originalEntityShader;
     private EntityRenderer entityRenderer;
     private Mathf mathf;
     private TerrainRenderer terrainRenderer;
@@ -34,6 +34,8 @@ public class MasterRenderer {
     public MasterRenderer() {
         entityShader = new Shader("res/shaders/vertex.vs", "res/shaders/fragment.fs");
         entityShader.compile();
+        originalEntityShader = entityShader;
+        originalEntityShader.compile();
         entityRenderer = new EntityRenderer(entityShader);
 
         terrainShader = new Shader("res/shaders/terrain/vertex.vs", "res/shaders/terrain/fragment.fs");
@@ -75,7 +77,7 @@ public class MasterRenderer {
         texts.clear();
     }
 
-    private void setupProjections() {
+    public void setupProjections() {
         Matrix4f proj = mathf.getProjMatrix(45, Window.width / (float) Window.height, 0.1f, 1000f);
         Matrix4f ortho = mathf.getOrthoMatrix(0, Window.width, Window.height, 0);
 
@@ -92,8 +94,25 @@ public class MasterRenderer {
         textShader.unbind();
     }
 
+    public Shader getOriginalEntityShader() {
+        return originalEntityShader;
+    }
+
+    public void setEntityShader(Shader shader) {
+        this.entityShader = shader;
+        entityRenderer.setShader(shader);
+    }
+
     public void addText(Text text) {
         texts.add(text);
+    }
+
+    public Shader getEntityShader() {
+        return entityShader;
+    }
+
+    public Shader getTerrainShader() {
+        return terrainShader;
     }
 
     public void addTerrain(Terrain terrain) {
