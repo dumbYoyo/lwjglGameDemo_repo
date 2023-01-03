@@ -6,11 +6,17 @@
 
 ## About the project
 
-This is a really simple project just with terrain, lighting (diffuse and specular), model loading (using assimp).
-I'm uploading this in case it helps someone out (I doubt it will as the code is unreadable).
+This is a really simple game.
+
+
+### Features
+1. Lighting (diffuse and specular)
+2. Model loading (using assimp)
+3. Ability to save or load games
+4. Shadows
 
 ## Some Screenshots
-This the current state:
+This is how the game looks 
 <p>
-     <img src="res/ss/Demo.PNG"/>
+     <img src="res/screenshots/Demo1.png"/>
 </p>
