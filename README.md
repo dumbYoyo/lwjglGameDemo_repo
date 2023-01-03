@@ -7,7 +7,7 @@
 ## About the project
 
 This is a really simple game.
-
+And yes, it's "brackeys beginner game" ripoff
 
 ### Features
 1. Lighting (diffuse and specular)
