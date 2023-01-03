@@ -1,9 +1,8 @@
 package engine.objects;
 
 import engine.utility.EntityManager;
-import engine.utility.Mesh;
-import engine.utility.Shape;
-import engine.utility.Texture;
+import engine.rendering.Shape;
+import engine.rendering.Texture;
 import org.joml.Vector3f;
 import java.util.List;
 

@@ -1,9 +1,9 @@
 package engine.saver;
 
-import engine.math.Utils;
+import engine.utility.Utils;
 import engine.objects.Entity;
 import engine.utility.EntityManager;
-import engine.utility.Mesh;
+import engine.objects.Mesh;
 import org.joml.Vector3f;
 
 import java.io.*;

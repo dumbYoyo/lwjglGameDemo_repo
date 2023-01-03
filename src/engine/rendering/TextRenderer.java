@@ -1,8 +1,6 @@
 package engine.rendering;
 
-import engine.math.Mathf;
-import engine.utility.Shader;
-import engine.utility.Texture;
+import engine.utility.Mathf;
 import engine.text.Text;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -14,13 +12,11 @@ import java.util.List;
 
 public class TextRenderer {
     private Shader shader;
-    private Mathf mathf;
     private Texture bitmap;
 
     public TextRenderer(Shader shader, Texture bitmap) {
         this.shader = shader;
         this.bitmap = bitmap;
-        mathf = new Mathf();
     }
 
     // TODO: make text rendering even more efficient
@@ -29,7 +25,7 @@ public class TextRenderer {
             GL20.glActiveTexture(GL13.GL_TEXTURE0);
             GL20.glBindTexture(GL11.GL_TEXTURE_2D, bitmap.getTextureID());
 
-            Matrix4f model = mathf.getModelMatrix(new Vector3f(text.getPosition(), 0), new Vector3f(0, 0, 0), new Vector3f(text.getScale(), 1));
+            Matrix4f model = Mathf.getModelMatrix(new Vector3f(text.getPosition(), 0), new Vector3f(0, 0, 0), new Vector3f(text.getScale(), 1));
             shader.loadMatrix4f("model", model);
 
             /*

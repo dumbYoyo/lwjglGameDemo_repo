@@ -1,7 +1,6 @@
 package engine.objects;
 
-import engine.utility.Mesh;
-import engine.utility.Texture;
+import engine.rendering.Texture;
 
 import java.util.ArrayList;
 import java.util.List;

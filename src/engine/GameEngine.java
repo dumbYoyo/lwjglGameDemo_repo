@@ -1,6 +1,5 @@
 package engine;
 
-import engine.archive.MouseInput;
 import org.lwjgl.glfw.GLFW;
 
 public class GameEngine implements Runnable {

@@ -1,12 +1,10 @@
 package engine.objects;
 
-import engine.utility.Mesh;
 import org.joml.Vector3f;
 
 public class Light {
     private Vector3f position;
     private Vector3f color;
-    private Mesh mesh;
 
     public Light() {
         position = new Vector3f(0, 0, 0);

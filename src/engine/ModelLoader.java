@@ -1,7 +1,7 @@
 package engine;
 
-import engine.math.Utils;
-import engine.utility.Mesh;
+import engine.utility.Utils;
+import engine.objects.Mesh;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
 

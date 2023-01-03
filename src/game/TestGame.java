@@ -2,19 +2,16 @@ package game;
 
 import engine.*;
 import engine.Window;
-import engine.archive.Renderer;
 import engine.fbos.ShadowFbo;
 import engine.input.MouseListener;
-import engine.math.Mathf;
 import engine.objects.Camera;
 import engine.objects.Entity;
 import engine.objects.Light;
-import engine.rendering.MasterRenderer;
+import engine.rendering.*;
 import engine.saver.GameSaver;
 import engine.saver.SaveData;
 import engine.utility.*;
 import engine.text.Text;
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
@@ -39,12 +36,7 @@ public class TestGame implements IGameLogic {
     private float fallSpeed = 5;
     private boolean gameStarted = false;
 
-    Shader shadowShader;
-
-    Shader shader;
-    Mesh mesh;
-    Shape shape = new Shape(Shape.SQUARE);
-    Texture texture;
+    private Shader shadowShader;
 
     @Override
     public void init() {
@@ -55,13 +47,14 @@ public class TestGame implements IGameLogic {
 
         light = new Light(new Vector3f(-2.0f, 4.0f, -1.0f), new Vector3f(1, 1, 1));
 
-        renderer = new MasterRenderer();
 
         text = new Text("Hit SPACE to start", new Vector2f(20, Window.height-690), new Vector2f(0.5f));
 
         player = new Entity("Entity", new Shape(Shape.CUBE), entityManager);
         player.setPosition(2, 1, 0);
         player.setColor(new Vector3f(1, 0, 0));
+
+        renderer = new MasterRenderer();
 
         save = GameSaver.loadSaveFrom("res/saves/save5.txt");
         for (String name : save.keySet()) {
@@ -74,23 +67,16 @@ public class TestGame implements IGameLogic {
         shadowFbo = new ShadowFbo();
         shadowShader = new Shader("res/shaders/shadow/vertex.vs", "res/shaders/shadow/fragment.fs");
         shadowShader.compile();
-
-        shader = new Shader("res/shaders/text/vertex.vs", "res/shaders/text/fragment.fs");
-        shader.compile();
-
-        mesh = new Mesh(shape.getVertices(), shape.getTextureCoordinates(), shape.getNormals(), shape.getIndices());
-        texture = new Texture("res/textures/ball.png");
     }
 
     @Override
     public void update(Window window, float dt) {
-        cameraMovement(dt);
-        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_S) == GLFW.GLFW_PRESS) {
-            player.getPosition().x += playerSpeed * dt;
-        }
-        if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
-            player.getPosition().x -= playerSpeed * dt;
-        }
+        //if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_S) == GLFW.GLFW_PRESS) {
+        //    player.getPosition().x += playerSpeed * dt;
+        //}
+        //if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
+        //    player.getPosition().x -= playerSpeed * dt;
+        //}
         if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_SPACE) == GLFW.GLFW_PRESS && !gameStarted) {
             gameStarted = true;
         }
@@ -123,47 +109,29 @@ public class TestGame implements IGameLogic {
             }
         }
 
-        //camera.setPosition(6.92f + player.getPosition().x, 5f, 0.18f);
-        //camera.setPitch(30.64f);
-        //camera.setYaw(271.22f);
+        camera.setPosition(6.92f + player.getPosition().x, 5f, 0.18f);
+        camera.setPitch(30.64f);
+        camera.setYaw(271.22f);
     }
 
-    Matrix4f lightProj = new Matrix4f();
-    Matrix4f lightView = new Matrix4f();
-    Matrix4f lightSpace = new Matrix4f();
-    Mathf mathf = new Mathf();
     @Override
     public void render(Window window) {
-
-
+        // shadow phase
         shadowFbo.bindFbo();
-        Window.clearDepth();
+        Window.clear();
+        GL11.glEnable(GL11.GL_FRONT);
         renderer.setEntityShader(shadowShader);
-
         renderScene();
         shadowFbo.unbindBondFbo();
 
+        // game render phase
+        GL11.glEnable(GL11.GL_BACK);
         Window.clear();
         renderer.setEntityShader(renderer.getOriginalEntityShader());
         renderer.getEntityShader().loadInteger("shadow_sampler", 1);
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
         GL20.glBindTexture(GL11.GL_TEXTURE_2D, shadowFbo.getDepthTexture());
         renderScene();
-
-
-
-
-
-
-        texture.setTextureID(shadowFbo.getDepthTexture());
-        shader.bind();
-        shader.loadInteger("texture_sampler", 0);
-        Matrix4f model = mathf.getModelMatrix(new Vector3f(0), new Vector3f(0, 0, 0), new Vector3f(1));
-        shader.loadMatrix4f("model", model);
-        GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL20.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
-        //mesh.render();
-        shader.unbind();
     }
 
     private void renderScene() {
@@ -174,11 +142,11 @@ public class TestGame implements IGameLogic {
             renderer.addEntity(e);
         }
 
-        Vector3f dir = new Vector3f(-2.0f, -4.0f, -1.0f);
+        Vector3f dir = new Vector3f(-2.0f, 4.0f, -1.0f);
         renderer.getEntityShader().loadVec3f("direction", dir);
         renderer.getTerrainShader().loadVec3f("direction", dir);
 
-        renderer.render(light, camera);
+        renderer.render(light, camera, player);
     }
 
     private void restart() {

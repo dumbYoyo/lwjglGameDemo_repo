@@ -1,13 +1,11 @@
 package engine.rendering;
 
 import engine.Window;
-import engine.math.Mathf;
+import engine.utility.Mathf;
 import engine.objects.Camera;
 import engine.objects.Entity;
 import engine.objects.EntityData;
 import engine.objects.Light;
-import engine.utility.Shader;
-import engine.utility.Texture;
 import engine.terrain.Terrain;
 import engine.terrain.TerrainGenerator;
 import engine.text.Text;
@@ -21,7 +19,6 @@ import java.util.Map;
 public class MasterRenderer {
     private Shader entityShader, originalEntityShader;
     private EntityRenderer entityRenderer;
-    private Mathf mathf;
     private TerrainRenderer terrainRenderer;
     private Shader terrainShader;
     private TextRenderer textRenderer;
@@ -32,7 +29,7 @@ public class MasterRenderer {
     private List<Text> texts = new ArrayList<>();
 
     public MasterRenderer() {
-        entityShader = new Shader("res/shaders/vertex.vs", "res/shaders/fragment.fs");
+        entityShader = new Shader("res/shaders/entity/vertex.vs", "res/shaders/entity/fragment.fs");
         entityShader.compile();
         originalEntityShader = entityShader;
         originalEntityShader.compile();
@@ -46,19 +43,17 @@ public class MasterRenderer {
         textShader.compile();
         textRenderer = new TextRenderer(textShader, new Texture("res/text/verdana.png"));
 
-        mathf = new Mathf();
-
         setupProjections();
     }
 
-    public void render(Light light, Camera camera) {
-        Matrix4f view = mathf.getViewMatrix(camera);
+    public void render(Light light, Camera camera, Entity player) {
+        Matrix4f view = Mathf.getViewMatrix(camera);
 
         entityShader.bind();
         entityShader.loadMatrix4f("view", view);
         entityShader.loadVec3f("lightPos", light.getPosition());
         entityShader.loadVec3f("lightColor", light.getColor());
-        entityRenderer.render(entities);
+        entityRenderer.render(entities, player);
         entityShader.unbind();
 
         terrainShader.bind();
@@ -78,8 +73,8 @@ public class MasterRenderer {
     }
 
     public void setupProjections() {
-        Matrix4f proj = mathf.getProjMatrix(45, Window.width / (float) Window.height, 0.1f, 1000f);
-        Matrix4f ortho = mathf.getOrthoMatrix(0, Window.width, Window.height, 0);
+        Matrix4f proj = Mathf.getProjMatrix(45, Window.width / (float) Window.height, 0.1f, 1000f);
+        Matrix4f ortho = Mathf.getOrthoMatrix(0, Window.width, Window.height, 0);
 
         entityShader.bind();
         entityShader.loadMatrix4f("proj", proj);

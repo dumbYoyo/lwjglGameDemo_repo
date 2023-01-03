@@ -1,6 +1,6 @@
 package engine.terrain;
 
-import engine.utility.Texture;
+import engine.rendering.Texture;
 import org.joml.Vector3f;
 
 public class Terrain {

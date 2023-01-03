@@ -38,11 +38,14 @@ public class Window {
         GLFW.glfwMakeContextCurrent(window);
         GL.createCapabilities();
 
+        GL11.glViewport(0, 0, 1920, 1080);
+
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     public static void clear() {
+        //GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearColor(0, 0, 0, 1);

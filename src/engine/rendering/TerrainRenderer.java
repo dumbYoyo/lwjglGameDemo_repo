@@ -1,7 +1,6 @@
 package engine.rendering;
 
-import engine.math.Mathf;
-import engine.utility.Shader;
+import engine.utility.Mathf;
 import engine.terrain.Terrain;
 import engine.terrain.TerrainGenerator;
 import org.joml.Matrix4f;
@@ -16,11 +15,9 @@ import java.util.Map;
 
 public class TerrainRenderer {
     private Shader shader;
-    private Mathf mathf;
 
     public TerrainRenderer(Shader shader) {
         this.shader = shader;
-        mathf = new Mathf();
     }
 
     public void render(Map<TerrainGenerator, List<Terrain>> terrains) {
@@ -35,7 +32,7 @@ public class TerrainRenderer {
 
             List<Terrain> batch = terrains.get(terrainData);
             for (Terrain terrain : batch) {
-                Matrix4f model = mathf.getModelMatrix(new Vector3f(terrain.getPosition().x - terrain.getTerrainGenerator().getSize()/2f, terrain.getPosition().y, terrain.getPosition().y - terrain.getTerrainGenerator().getSize()/2f), new Vector3f(0, 0, 0), new Vector3f(1));
+                Matrix4f model = Mathf.getModelMatrix(new Vector3f(terrain.getPosition().x - terrain.getTerrainGenerator().getSize()/2f, terrain.getPosition().y, terrain.getPosition().y - terrain.getTerrainGenerator().getSize()/2f), new Vector3f(0, 0, 0), new Vector3f(1));
                 shader.loadMatrix4f("model", model);
 
                 GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getTerrainGenerator().getMesh().vertexCount, GL11.GL_UNSIGNED_INT, 0);

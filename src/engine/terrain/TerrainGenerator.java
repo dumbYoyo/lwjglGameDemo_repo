@@ -1,7 +1,7 @@
 package engine.terrain;
 
-import engine.utility.Mesh;
-import engine.utility.Texture;
+import engine.objects.Mesh;
+import engine.rendering.Texture;
 
 public class TerrainGenerator {
     private static final int VERTEX_COUNT = 4;
