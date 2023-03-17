@@ -14,6 +14,8 @@ This is a really simple game. And yes, it's "brackeys beginner game" ripoff
 2. Model loading (using assimp)
 3. Ability to save or load games
 4. Shadows
+5. Bitmap text rendering
+6. Really simple gui (only has clickable buttons at the moment)
 
 ## Some Screenshots
 
