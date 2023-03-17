@@ -6,17 +6,28 @@
 
 ## About the project
 
-This is a really simple game.
-And yes, it's "brackeys beginner game" ripoff
+This is a really simple game. And yes, it's "brackeys beginner game" ripoff
 
 ### Features
+
 1. Lighting (diffuse and specular)
 2. Model loading (using assimp)
 3. Ability to save or load games
 4. Shadows
 
 ## Some Screenshots
-This is how the game looks 
+
+### This is how the game looks
+
 <p>
-     <img src="res/screenshots/Demo1.png"/>
+    1. Iteration one
+    <img src="res/screenshots/Demo.png"/>
+</p>
+<p>
+    2. Iteration two
+    <img src="res/screenshots/Demo1.png"/>
+</p>
+<p>
+    3. Iteration three
+    <img src="res/screenshots/Demo2.png"/>
 </p>
