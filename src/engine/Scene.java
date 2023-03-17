@@ -1,6 +1,6 @@
 package engine;
 
-public interface IGameLogic { // interfaces ummmmmmm
+public interface Scene { // interfaces ummmmmmm
     void init();
     void update(Window window, float dt);
     void render(Window window);

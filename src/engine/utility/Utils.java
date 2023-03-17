@@ -16,6 +16,14 @@ public class Utils {
         return array;
     }
 
+    public static float getAverageOfFloatList(List<Float> list) {
+        float sum = 0;
+        for (float element : list) {
+            sum += element;
+        }
+        return sum / list.size();
+    }
+
     public static float[] stringListToFloatArray(List<String> list) {
         int listCapacity = list.size();
         float[] array = new float[listCapacity];

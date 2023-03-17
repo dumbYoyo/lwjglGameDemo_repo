@@ -142,7 +142,7 @@ public class Renderer {
         Matrix4f model = Mathf.getModelMatrix(new Vector3f(text.getPosition(), 0), new Vector3f(0, 0, 0), new Vector3f(text.getScale(), 1));
         hudShader.loadMatrix4f("model", model);
 
-        text.getMesh().render();
+        text.getTextData().getMesh().render();
 
         hudShader.unbind();
     }

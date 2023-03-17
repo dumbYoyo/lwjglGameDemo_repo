@@ -24,6 +24,12 @@ public class ShadowFbo extends Fbo {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
+    @Override
+    public void cleanUp() {
+        super.cleanUp();
+        GL11.glDeleteTextures(depthTexture);
+    }
+
     public int getDepthTexture() {
         return depthTexture;
     }

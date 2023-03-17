@@ -1,6 +1,10 @@
-package engine.rendering;
+package engine.rendering.renderer;
 
 import engine.Window;
+import engine.gui.Button;
+import engine.rendering.Shader;
+import engine.rendering.Texture;
+import engine.text.TextData;
 import engine.utility.Mathf;
 import engine.objects.Camera;
 import engine.objects.Entity;
@@ -10,6 +14,8 @@ import engine.terrain.Terrain;
 import engine.terrain.TerrainGenerator;
 import engine.text.Text;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,16 +23,19 @@ import java.util.List;
 import java.util.Map;
 
 public class MasterRenderer {
-    private Shader entityShader, originalEntityShader;
     private EntityRenderer entityRenderer;
+    private Shader entityShader, originalEntityShader;
     private TerrainRenderer terrainRenderer;
     private Shader terrainShader;
     private TextRenderer textRenderer;
     private Shader textShader;
+    private GuiRenderer guiRenderer;
+    private Shader guiShader;
 
     private Map<EntityData, List<Entity>> entities = new HashMap<>();
     private Map<TerrainGenerator, List<Terrain>> terrains = new HashMap<>();
-    private List<Text> texts = new ArrayList<>();
+    private Map<TextData, List<Text>> texts = new HashMap<>();
+    private List<Button> guis = new ArrayList<>();
 
     public MasterRenderer() {
         entityShader = new Shader("res/shaders/entity/vertex.vs", "res/shaders/entity/fragment.fs");
@@ -41,12 +50,16 @@ public class MasterRenderer {
 
         textShader = new Shader("res/shaders/text/vertex.vs", "res/shaders/text/fragment.fs");
         textShader.compile();
-        textRenderer = new TextRenderer(textShader, new Texture("res/text/verdana.png"));
+        textRenderer = new TextRenderer(textShader);
+
+        guiShader = new Shader("res/shaders/gui/vertex.vs", "res/shaders/gui/fragment.fs");
+        guiShader.compile();
+        guiRenderer = new GuiRenderer(guiShader);
 
         setupProjections();
     }
 
-    public void render(Light light, Camera camera, Entity player) {
+    public void renderEntities(Light light, Camera camera, Entity player) {
         Matrix4f view = Mathf.getViewMatrix(camera);
 
         entityShader.bind();
@@ -63,13 +76,22 @@ public class MasterRenderer {
         terrainRenderer.render(terrains);
         terrainShader.unbind();
 
+        entities.clear();
+        terrains.clear();
+    }
+
+    public void renderGuis() {
         textShader.bind();
         textRenderer.render(texts);
         textShader.unbind();
 
-        entities.clear();
-        terrains.clear();
-        texts.clear();
+        guiShader.bind();
+        guiRenderer.render(guis, this);
+        guiShader.unbind();
+
+        if (texts.size() > 1)
+            texts.clear();
+        guis.clear();
     }
 
     public void setupProjections() {
@@ -87,6 +109,10 @@ public class MasterRenderer {
         textShader.bind();
         textShader.loadMatrix4f("proj", ortho);
         textShader.unbind();
+
+        guiShader.bind();
+        guiShader.loadMatrix4f("proj", ortho);
+        guiShader.unbind();
     }
 
     public Shader getOriginalEntityShader() {
@@ -98,8 +124,11 @@ public class MasterRenderer {
         entityRenderer.setShader(shader);
     }
 
-    public void addText(Text text) {
-        texts.add(text);
+    public void cleanUp() {
+        entityShader.cleanUp();
+        textShader.cleanUp();
+        terrainShader.cleanUp();
+        guiShader.cleanUp();
     }
 
     public Shader getEntityShader() {
@@ -108,6 +137,22 @@ public class MasterRenderer {
 
     public Shader getTerrainShader() {
         return terrainShader;
+    }
+
+    public void addGui(Button button) {
+        guis.add(button);
+    }
+
+    public void addText(Text text) {
+        TextData textData = text.getTextData();
+        List<Text> batch = texts.get(textData);
+        if (batch != null) {
+            batch.add(text);
+        } else {
+            List<Text> newBatch = new ArrayList<>();
+            newBatch.add(text);
+            texts.put(textData, newBatch);
+        }
     }
 
     public void addTerrain(Terrain terrain) {

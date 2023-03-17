@@ -19,6 +19,11 @@ public class EntityManager {
         entities_Id.put(entity.getId(), entity);
     }
 
+    public void cleanUp() {
+        entities_Id.clear();
+        entities_name.clear();
+    }
+
     public Entity getEntity(String name) {
         return entities_name.get(name);
     }

@@ -46,6 +46,48 @@ public class Texture {
         }
     }
 
+    public Texture(String path, int params) {
+        this.path = path;
+
+        textureID = GL11.glGenTextures();
+
+        IntBuffer x = BufferUtils.createIntBuffer(1);
+        IntBuffer y = BufferUtils.createIntBuffer(1);
+        IntBuffer ch = BufferUtils.createIntBuffer(1);
+        ByteBuffer data = STBImage.stbi_load(path, x, y, ch, 0);
+
+        if (data != null) {
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, params);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, params);
+
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, x.get(), y.get(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
+            GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+
+            GL11.glGetTexLevelParameterfv(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH, width);
+            GL11.glGetTexLevelParameterfv(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT, height);
+
+            STBImage.stbi_image_free(data);
+        } else {
+            System.err.println("Failed to load stb image");
+        }
+    }
+
+    public void cleanUp() {
+        GL11.glDeleteTextures(textureID);
+    }
+
+    public void bind() {
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+    }
+
+    public void unbind() {
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+    }
+
     public float getWidth() {
         return width.get(0);
     }

@@ -28,6 +28,10 @@ public abstract class Fbo {
         return ((int) pixels[0]) - 1;
     }
 
+    public void cleanUp() {
+        GL30.glDeleteFramebuffers(fbo);
+    }
+
     public void bindFbo() {
         // make sure no texture is bond, bcz if any texture is bond, stuff gets f*d up man
         GL20.glBindTexture(GL11.GL_TEXTURE_2D, 0);

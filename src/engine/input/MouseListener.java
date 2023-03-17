@@ -7,6 +7,7 @@ public class MouseListener {
     private double scrollX, scrollY;
     private double posX, posY, lastY, lastX; // last y and x will be used as dx and dy
     private boolean mouseButtonPressed[] = new boolean[3];
+    private boolean mouseButtonClicked[] = new boolean[3];
     private boolean isDragging;
 
     private MouseListener() {
@@ -41,6 +42,9 @@ public class MouseListener {
             } else {
                 System.out.println("We don't use that button!: " + button);
             }
+
+            get().mouseButtonClicked[button] = true;
+
         } else if (action == GLFW.GLFW_RELEASE) {
             if (button < get().mouseButtonPressed.length) {
                 get().mouseButtonPressed[button] = false;
@@ -61,6 +65,9 @@ public class MouseListener {
         get().scrollY = 0;
         get().lastX = get().posX;
         get().lastY = get().posY;
+        for (int i = 0; i < get().mouseButtonPressed.length; i++) {
+            get().mouseButtonClicked[i] = false;
+        }
     }
 
     public static float getX() {
@@ -97,5 +104,9 @@ public class MouseListener {
         } else {
             return false;
         }
+    }
+
+    public static boolean mouseButtonClicked(int button) {
+        return get().mouseButtonClicked[button];
     }
 }

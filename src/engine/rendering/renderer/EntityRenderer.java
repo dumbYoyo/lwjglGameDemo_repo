@@ -1,6 +1,7 @@
-package engine.rendering;
+package engine.rendering.renderer;
 
 import engine.objects.Mesh;
+import engine.rendering.Shader;
 import engine.utility.Mathf;
 import engine.objects.Entity;
 import engine.objects.EntityData;

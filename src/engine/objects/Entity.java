@@ -17,7 +17,7 @@ public class Entity {
     private String collisionMask = "null";
 
     private String name;
-    private static int nameCounter;
+    private static int nameCounter = 0;
     private int id;
     private static int IDCounter = 0;
 
@@ -77,6 +77,10 @@ public class Entity {
 
         id = IDCounter++;
         manager.addEntity(this);
+    }
+
+    public void cleanUp() {
+        entityData.cleanUp();
     }
 
     public static boolean checkCollision(Entity a, Entity b) {

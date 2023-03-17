@@ -4,15 +4,21 @@ import org.lwjgl.glfw.GLFW;
 
 public class GameEngine implements Runnable {
     private Window window;
-    private IGameLogic gameLogic;
+    private static Scene scene;
     private final Thread gameLoopThread;
     private boolean vSync;
 
-    public GameEngine(String windowTitle, int width, int height, boolean vSync, IGameLogic gameLogic) {
+    public GameEngine(String windowTitle, int width, int height, boolean vSync, Scene scene) {
         gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
         window = new Window(width, height, windowTitle);
-        this.gameLogic = gameLogic;
+        GameEngine.scene = scene;
         this.vSync = vSync;
+    }
+
+    public static void changeScene(Scene scene) {
+        GameEngine.scene.cleanUp();
+        GameEngine.scene = scene;
+        GameEngine.scene.init();
     }
 
     public void start() {
@@ -69,21 +75,21 @@ public class GameEngine implements Runnable {
     }
 
     protected void update(float dt) {
-        gameLogic.update(window, dt);
+        scene.update(window, dt);
     }
 
     protected void render() {
-        gameLogic.render(window);
+        scene.render(window);
     }
 
     protected void cleanUp() {
-        gameLogic.cleanUp();
+        scene.cleanUp();
         window.cleanUp();
     }
 
     protected void init() {
         window.create();
-        gameLogic.init();
+        scene.init();
         if (vSync) {
             window.setSwapInterval(1);
         }
